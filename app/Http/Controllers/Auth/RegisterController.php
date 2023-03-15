@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Helper\ApiLogin;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rules\Password;
 
 class RegisterController extends Controller
 {
@@ -56,8 +57,14 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => Password::min(8)
+                ->letters()
+                ->mixedCase()
+                ->numbers()
+                ->symbols()
+                ->uncompromised(),
             'gender' => ['required', 'string'],
+            'roles' => ['required', 'string']
         ]);
     }
 
@@ -72,7 +79,7 @@ class RegisterController extends Controller
         $ApiData = ApiLogin::instance()->makeCall('users', 'POST', ApiLogin::instance()->useDefaultToken(), json_encode([
             'email' => $data['email'],
             'roles' => [
-                'user'
+                $data['roles']
             ],
             'password' => $data['password'],
             'first_name' => $data['name'],
@@ -91,7 +98,7 @@ class RegisterController extends Controller
                 'password' => Hash::make($data['password']),
                 'gender' => $data['gender'],
                 'active' => $ApiData->active ? 1 : 0,
-                'roles' => config('appconfig.default_user_role'),
+                'roles' => $data['roles'],
                 'login_token' => $ApiData->login_token,
                 'password_reset_token' => $ApiData->password_reset_token,
                 'email_confirmed' => $ApiData->email_confirmed ? 1 : 0

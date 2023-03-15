@@ -72,7 +72,7 @@ class BookController extends Controller
      */
     public function destroy($id)
     {
-        ApiLogin::instance()->makeCall('books'.'/'.$id, 'DELETE', ApiLogin::instance()->getToken());
+        dd(ApiLogin::instance()->makeCall('books'.'/'.$id, 'DELETE', ApiLogin::instance()->getToken()));
 
         return redirect()->to('home')->with('status', 'Book Deleted!');
     }
