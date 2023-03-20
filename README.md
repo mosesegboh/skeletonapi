@@ -6,6 +6,7 @@ TO RUN -clone fork.
 
 PROCESSES 
 -I added Cache to some processes which I thought was necessary. Note that this is totally descretionary and could be added in other areas but I chose to keep it minimal to avoid unecessary complexities. 
+-File caching was used instead of reies or others considering the size of the application.
 -I implemented queue jobs for adding authors since this is such a task that can be queued to make application faster. remember to run php artisan queue:work for the queue jobs to start working.
 -There is a helper class under App\Helpers\ApiLogin with relevant functions for dealing with the API.
 run for schedules.
